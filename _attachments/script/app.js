@@ -15,10 +15,15 @@
  * IN THE SOFTWARE.
  *
  */
-angular.module('CouchApp', ['CornerCouch']);
+var App = angular.module('CouchApp', ['CornerCouch'])
+    .config(function($routeProvider) {
+        $routeProvider
+            .when('/', {controller:StatisticsCtrl, templateUrl:'statistics.html'})
+            .when('/new', {controller:InputCtrl, templateUrl:'input.html'})
+            .otherwise({redirectTo:'/'});
+    });
 
-
-function InputCtrl($scope, $filter, cornercouch) {
+function InputCtrl($scope, $location, cornercouch) {
     $scope.server = cornercouch();
     $scope.server.session();
     $scope.userdb = $scope.server.getDB('klomp');
@@ -28,6 +33,7 @@ function InputCtrl($scope, $filter, cornercouch) {
         $scope.newentry.save()
             .success(function(data, status) {
                 initEntry();
+                $location.path("/");
             })
             .error(function(data, status) {
                 alert(status);
@@ -43,6 +49,12 @@ function InputCtrl($scope, $filter, cornercouch) {
     }
 }
 
+
+function StatisticsCtrl($scope, cornercouch) {
+    $scope.server = cornercouch();
+    $scope.server.session();
+    $scope.userdb = $scope.server.getDB('klomp');
+}
 
 function getIsoDate(date) {
     if ( typeof(date) == "undefined" ) {

@@ -1,0 +1,27 @@
+<form ng-submit="submitData()">
+    <label>Date</label>
+    <input type="date" ng-model="newentry.date">
+    <input type="time" ng-model="newentry.time">
+
+    <hr>
+    <label>Pulse</label>
+    <input type="number" ng-model="newentry.heart.pulse">
+    <hr>
+    
+    <label>Pressure Systolic</label>
+    <input type="number" ng-model="newentry.heart.pressure.systolic">
+    <hr>
+
+    <label>Pressure Diastolic</label>
+    <input type="number" ng-model="newentry.heart.pressure.diastolic">
+    <hr>
+
+    <label>Weigth</label>
+    <input type="number" ng-model="newentry.weight.value">
+    <hr>
+
+    <label>Naked</label>
+    <input type="checkbox" ng-model="newentry.weight.nacked">
+    <hr>
+    <button class='btn' type="submit">Submit</button>
+</form>
