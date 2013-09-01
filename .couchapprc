@@ -1,0 +1,10 @@
+{
+    "env" : {
+        "default" : {
+            "db" : "https://username:passwort@couch.server.com/dbname/"
+        },
+        "prod" : {
+            "db" : "https://username:passwort@couch.server.com/dbname/"
+        }
+    }
+}

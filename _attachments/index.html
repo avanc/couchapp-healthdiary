@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html ng-app="CouchApp">
+<head>
+    <title>Health Diary</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="style/layout.css">
+    <script src="script/angular.js" type="text/javascript"></script>
+    <script src="script/angular-cornercouch.js" type="text/javascript"></script>
+    <script src="script/app.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body>
+
+    <div ng-controller="InputCtrl">
+        <form ng-submit="submitData()">
+            <label>Date</label>
+            <input type="date" ng-model="newentry.date">
+            <input type="time" ng-model="newentry.time">
+
+            <hr>
+            <label>Pulse</label>
+            <input type="number" ng-model="newentry.heart.pulse">
+            <hr>
+            
+            <label>Pressure Systolic</label>
+            <input type="number" ng-model="newentry.heart.pressure.systolic">
+            <hr>
+
+            <label>Pressure Diastolic</label>
+            <input type="number" ng-model="newentry.heart.pressure.diastolic">
+            <hr>
+
+            <label>Weigth</label>
+            <input type="number" ng-model="newentry.weight.value">
+            <hr>
+
+            <label>Naked</label>
+            <input type="checkbox" ng-model="newentry.weight.nacked">
+            <hr>
+            <button class='btn' type="submit">Submit</button>
+    </form>
+   </div>
+</body>
+</html>
