@@ -22,16 +22,25 @@ function InputCtrl($scope, $filter, cornercouch) {
     $scope.server = cornercouch();
     $scope.server.session();
     $scope.userdb = $scope.server.getDB('klomp');
-    $scope.newentry = $scope.userdb.newDoc(); 
-    
-    $scope.newentry.type = "health";
-    $scope.newentry.date = getIsoDate();
-    $scope.newentry.time = getTime();
-    
+    initEntry();
     
     $scope.submitData = function() {
-        $scope.newentry.save();
-    }; 
+        $scope.newentry.save()
+            .success(function(data, status) {
+                initEntry();
+            })
+            .error(function(data, status) {
+                alert(status);
+                alert(data);
+            });
+    };
+    
+    function initEntry() {
+        $scope.newentry = $scope.userdb.newDoc(); 
+        $scope.newentry.type = "health";
+        $scope.newentry.date = getIsoDate();
+        $scope.newentry.time = getTime();
+    }
 }
 
 
