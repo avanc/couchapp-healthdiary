@@ -107,7 +107,7 @@ function StatisticsCtrl($scope, cornercouch) {
     $scope.server.session();
     $scope.userdb = $scope.server.getDB('klomp');
 
-    $scope.data={};
+    $scope.data={weight: [[[]], [[]]]};
     
     $scope.userdb.query("health_diary", "heart_pulse", { include_docs: false, descending: true})
         .success(function(data, status) {
@@ -132,6 +132,7 @@ function StatisticsCtrl($scope, cornercouch) {
             $scope.data.pressure=[diastolic, systolic];
         });
     
+
     $scope.userdb.query("health_diary", "weight_dressed", { include_docs: false, descending: true})
         .success(function(data, status) {
             var weight=[];
@@ -140,9 +141,20 @@ function StatisticsCtrl($scope, cornercouch) {
                 var row = data.rows[i];
                 weight.push([getTimestamp(row.key[0], row.key[1]), row.value]);
             }
-            $scope.data.weight=[weight];
+            $scope.data.weight=[$scope.data.weight[0],weight];
         });
         
+    $scope.userdb.query("health_diary", "weight_naked", { include_docs: false, descending: true})
+        .success(function(data, status) {
+            var weight=[];
+            
+            for (var i=0; i<data.rows.length; i++) {
+                var row = data.rows[i];
+                weight.push([getTimestamp(row.key[0], row.key[1]), row.value]);
+            }
+            $scope.data.weight=[weight, $scope.data.weight[1]];
+        });
+
         
 }
 
