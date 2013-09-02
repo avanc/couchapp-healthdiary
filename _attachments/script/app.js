@@ -29,20 +29,44 @@ var App = angular.module('CouchApp', ['CornerCouch'])
         restrict: 'E',
         link: function(scope, elem, attrs){
             
-            var chart = null,
-                opts  = { };
+            var chart = null;
+            var opts  = {
+                    series: {
+                        lines: { show: true },
+                        points: { show: true }
+                    },
+                    xaxis: {
+                        mode: "time",
+                        //zoomRange: [0.1, 10],
+                        //panRange: [-10, 10],
+                        //font :  {
+                        //      size:10,
+                        //      color: "#000000"
+                        //}
+                    },
+                    yaxis: {
+                        //zoomRange: [1, 1],
+                        //panRange: [300, 400]
+                    },
+                    zoom: {
+                        interactive: true
+                    },
+                    pan: {
+                        interactive: true
+                    }                    
+                };
 
             scope.$watch(attrs.ngModel, function(v) {
-                //alert(scope.$root.$$phase)
-                //alert(v)
-                if(!chart) {
-                    chart = $.plot(elem, [v] , opts);
-                    elem.show();
-                }
-                else {
-                    chart.setData([v]);
-                    chart.setupGrid();
-                    chart.draw();
+                if (typeof(v)!== "undefined") {
+                    if(!chart) {
+                        chart = $.plot(elem, v , opts);
+                        elem.show();
+                    }
+                    else {
+                        chart.setData(v);
+                        chart.setupGrid();
+                        chart.draw();
+                    }
                 }
             });
         }
@@ -83,7 +107,7 @@ function StatisticsCtrl($scope, cornercouch) {
     $scope.server.session();
     $scope.userdb = $scope.server.getDB('klomp');
 
-    $scope.data={pulse: [[1,2], [3,4]]};
+    $scope.data={};
     
     $scope.userdb.query("health_diary", "heart_pulse", { include_docs: false, descending: true})
         .success(function(data, status) {
@@ -92,8 +116,34 @@ function StatisticsCtrl($scope, cornercouch) {
                 var row = data.rows[i];
                 pulse.push([getTimestamp(row.key[0], row.key[1]), row.value]);
             }
-            $scope.data.pulse=pulse;
+            $scope.data.pulse=[pulse];
         });
+
+    $scope.userdb.query("health_diary", "heart_pressure", { include_docs: false, descending: true})
+        .success(function(data, status) {
+            var diastolic=[];
+            var systolic=[];
+            
+            for (var i=0; i<data.rows.length; i++) {
+                var row = data.rows[i];
+                diastolic.push([getTimestamp(row.key[0], row.key[1]), row.value["diastolic"]]);
+                systolic.push([getTimestamp(row.key[0], row.key[1]), row.value["systolic"]]);
+            }
+            $scope.data.pressure=[diastolic, systolic];
+        });
+    
+    $scope.userdb.query("health_diary", "weight_dressed", { include_docs: false, descending: true})
+        .success(function(data, status) {
+            var weight=[];
+            
+            for (var i=0; i<data.rows.length; i++) {
+                var row = data.rows[i];
+                weight.push([getTimestamp(row.key[0], row.key[1]), row.value]);
+            }
+            $scope.data.weight=[weight];
+        });
+        
+        
 }
 
 function getIsoDate(date) {
