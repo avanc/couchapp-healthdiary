@@ -1,4 +1,4 @@
-<form ng-submit="submitData()">
+<form ng-submit="submitData()" novalidate>
     <label>Date</label>
     <input type="date" ng-model="newentry.date">
     <input type="time" ng-model="newentry.time">
@@ -23,5 +23,10 @@
     <label>Naked</label>
     <input type="checkbox" ng-model="newentry.weight.nacked">
     <hr>
+    
+    <label>Notes:</label>
+    <input type="testarea" ng-model="newentry.notes">
+    <hr>
+    
     <button class='btn' type="submit">Submit</button>
 </form>

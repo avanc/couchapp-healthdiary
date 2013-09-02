@@ -11,16 +11,12 @@ body{
 }
 
 
-#addrefueling{
-    width: 250px;
-    margin: 0 auto;
-    text-align:left;
-}
 
 
 P {
     margin: 0px;
 }
+
 
 input {
     width:100px;
@@ -37,4 +33,10 @@ input {
 
 .plots {
     height:150px;
+}
+
+chart {
+    display:block;
+    width:400px;
+    height:200px;
 }

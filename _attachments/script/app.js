@@ -23,7 +23,35 @@ var App = angular.module('CouchApp', ['CornerCouch'])
             .otherwise({redirectTo:'/'});
     });
 
-function InputCtrl($scope, $location, cornercouch) {
+    
+ App.directive('chart', function(){
+    return{
+        restrict: 'E',
+        link: function(scope, elem, attrs){
+            
+            var chart = null,
+                opts  = { };
+
+            scope.$watch(attrs.ngModel, function(v) {
+                //alert(scope.$root.$$phase)
+                //alert(v)
+                if(!chart) {
+                    chart = $.plot(elem, [v] , opts);
+                    elem.show();
+                }
+                else {
+                    chart.setData([v]);
+                    chart.setupGrid();
+                    chart.draw();
+                }
+            });
+        }
+    };
+});
+
+    
+    
+function InputCtrl($scope, $window, cornercouch) {
     $scope.server = cornercouch();
     $scope.server.session();
     $scope.userdb = $scope.server.getDB('klomp');
@@ -33,7 +61,7 @@ function InputCtrl($scope, $location, cornercouch) {
         $scope.newentry.save()
             .success(function(data, status) {
                 initEntry();
-                $location.path("/");
+                $window.history.back();
             })
             .error(function(data, status) {
                 alert(status);
@@ -54,6 +82,18 @@ function StatisticsCtrl($scope, cornercouch) {
     $scope.server = cornercouch();
     $scope.server.session();
     $scope.userdb = $scope.server.getDB('klomp');
+
+    $scope.data={pulse: [[1,2], [3,4]]};
+    
+    $scope.userdb.query("health_diary", "heart_pulse", { include_docs: false, descending: true})
+        .success(function(data, status) {
+            var pulse=[];
+            for (var i=0; i<data.rows.length; i++) {
+                var row = data.rows[i];
+                pulse.push([getTimestamp(row.key[0], row.key[1]), row.value]);
+            }
+            $scope.data.pulse=pulse;
+        });
 }
 
 function getIsoDate(date) {
@@ -88,4 +128,14 @@ function getTime(date) {
 
     var isoTime = hours +':'+ minutes;
     return isoTime;
+}
+
+function getTimestamp(date, time) {
+    if (typeof(time) === "undefined") {
+        return (new Date(date)).getTime();
+    }
+    else {
+        return (new Date(date+ "T" + time+":00")).getTime();
+    }
+    
 }
