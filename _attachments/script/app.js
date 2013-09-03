@@ -37,6 +37,7 @@ var App = angular.module('CouchApp', ['CornerCouch'])
                     },
                     xaxis: {
                         mode: "time",
+                        timezone: "browser"
                         //zoomRange: [0.1, 10],
                         //panRange: [-10, 10],
                         //font :  {
@@ -187,6 +188,8 @@ function getTime(date) {
     
     if(minutes <= 9)
         minutes = '0'+minutes;
+    if(hours <= 9)
+        hours = '0'+hours;
 
     var isoTime = hours +':'+ minutes;
     return isoTime;
@@ -197,7 +200,14 @@ function getTimestamp(date, time) {
         return (new Date(date)).getTime();
     }
     else {
-        return (new Date(date+ "T" + time+":00")).getTime();
+        // Check, if time has leading zero
+        if (time.split(":")[0].length==2) {
+            return (new Date(date+ "T" + time+":00")).getTime();
+        }
+        else
+        {
+            return (new Date(date+ "T0" + time+":00")).getTime();
+        }
     }
     
 }
